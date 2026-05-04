@@ -1,0 +1,263 @@
+@import "tailwindcss";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+:root {
+  --radius: 0.25rem;
+  --background: oklch(0.99 0 0);
+  --foreground: oklch(0.12 0 0);
+  --card: oklch(0.99 0 0);
+  --card-foreground: oklch(0.12 0 0);
+  --primary: oklch(0.12 0 0);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.96 0 0);
+  --secondary-foreground: oklch(0.12 0 0);
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.52 0 0);
+  --accent: oklch(0.55 0.08 60);
+  --accent-foreground: oklch(0.99 0 0);
+  --border: oklch(0.9 0 0);
+  --input: oklch(0.9 0 0);
+  --ring: oklch(0.7 0 0);
+}
+
+.dark {
+  --background: oklch(0.1 0 0);
+  --foreground: oklch(0.97 0 0);
+  --primary: oklch(0.97 0 0);
+  --primary-foreground: oklch(0.1 0 0);
+  --muted: oklch(0.2 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --border: oklch(1 0 0 / 10%);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+    box-sizing: border-box;
+  }
+  body {
+    background-color: oklch(0.99 0 0);
+    color: oklch(0.12 0 0);
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .bg-background {
+    background-color: oklch(0.99 0 0);
+  }
+  .bg-foreground {
+    background-color: oklch(0.12 0 0);
+  }
+  .bg-muted {
+    background-color: oklch(0.96 0 0);
+  }
+  .text-foreground {
+    color: oklch(0.12 0 0);
+  }
+  .text-background {
+    color: oklch(0.99 0 0);
+  }
+  .text-muted-foreground {
+    color: oklch(0.52 0 0);
+  }
+  .border-border {
+    border-color: oklch(0.9 0 0);
+  }
+  .bg-border {
+    background-color: oklch(0.9 0 0);
+  }
+
+  .label-sm {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+  }
+}
+
+/* Marquee animation */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+/* Fade in on scroll (simplified — use framer-motion in production) */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== HERO ANIMATIONS ===== */
+
+@keyframes slowZoom {
+  0% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+}
+
+@keyframes floatSlow2 {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(25px);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradientMove {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* animation utilities */
+
+.animate-slowZoom {
+  animation: slowZoom 12s ease-in-out infinite alternate;
+}
+
+.animate-floatSlow {
+  animation: floatSlow 8s ease-in-out infinite;
+}
+
+.animate-floatSlow2 {
+  animation: floatSlow2 10s ease-in-out infinite;
+}
+
+.animate-fadeUp1 {
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.animate-fadeUp2 {
+  animation: fadeUp 1s ease forwards;
+  animation-delay: 0.2s;
+}
+
+.animate-fadeUp3 {
+  animation: fadeUp 1.2s ease forwards;
+  animation-delay: 0.4s;
+}
+
+.animate-gradientMove {
+  animation: gradientMove 6s ease-in-out infinite;
+}
+
+.animate-pulseSlow {
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.8s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.animate-zoom-in {
+  animation: zoomIn 1.2s ease-out forwards;
+}
+
+/* ─── Mobile Responsiveness Fixes ─────────────────────── */
+
+/* Prevent horizontal overflow globally */
+html { overflow-x: hidden; }
+body { overflow-x: hidden; max-width: 100vw; }
+* { box-sizing: border-box; }
+
+/* Image overflow fix */
+img { max-width: 100%; }
+
+/* Ensure sections don't overflow */
+section { overflow-x: hidden; max-width: 100vw; }
+
+/* Products and Services grid - single column on small screens */
+@media (max-width: 640px) {
+  .product-grid,
+  .service-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Admin sidebar hidden on very small screens */
+@media (max-width: 640px) {
+  .admin-sidebar {
+    display: none;
+  }
+}

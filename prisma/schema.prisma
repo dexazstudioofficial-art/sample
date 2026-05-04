@@ -1,0 +1,231 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  name         String
+  role         String     @default("admin")
+  lastLogin    DateTime?
+  createdAt    DateTime   @default(now())
+  sessions     Session[]
+  auditLogs    AuditLog[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  adminId   String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  admin     Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+}
+
+model SiteSettings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  type      String   @default("text")
+  group     String   @default("general")
+  label     String
+  updatedAt DateTime @updatedAt
+}
+
+model PageContent {
+  id        String   @id @default(cuid())
+  page      String
+  section   String
+  key       String
+  value     String
+  type      String   @default("text")
+  updatedAt DateTime @updatedAt
+
+  @@unique([page, section, key])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  adminId   String
+  action    String
+  entity    String
+  entityId  String?
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+  admin     Admin    @relation(fields: [adminId], references: [id])
+}
+
+// ─── Product Service Category ──────────────────────────
+model ServiceCategory {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String    @default("")
+  icon        String    @default("")
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  products    Product[]
+}
+
+// ─── Service Category (separate from products) ─────────
+model ServiceCat {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  name        String
+  description String        @default("")
+  icon        String        @default("")
+  isActive    Boolean       @default(true)
+  sortOrder   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  items       ServiceItem[]
+}
+
+// ─── Service Item (mirrors Product structure) ──────────
+model ServiceItem {
+  id           String      @id @default(cuid())
+  slug         String      @unique @default("")
+  name         String
+  category     String      @default("")
+  subCategory  String      @default("")
+  serviceCatId String?
+  description  String      @default("")
+  tagline      String      @default("")
+  heroImage    String      @default("")
+  image        String      @default("")
+  specs        String      @default("[]")
+  features     String      @default("[]")
+  tags         String      @default("[]")
+  whyPoints    String      @default("[]")
+  relatedLinks String      @default("[]")
+  variants     String      @default("[]")
+  metaTitle    String      @default("")
+  metaDesc     String      @default("")
+  isActive     Boolean     @default(true)
+  sortOrder    Int         @default(0)
+  createdAt    DateTime    @default(now())
+
+  serviceCat   ServiceCat? @relation(fields: [serviceCatId], references: [id], onDelete: SetNull)
+}
+
+// ─── Slug Redirect ─────────────────────────────────────
+model SlugRedirect {
+  id        String   @id @default(cuid())
+  oldSlug   String   @unique
+  newSlug   String
+  entity    String   @default("product")
+  createdAt DateTime @default(now())
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String
+  alt       String   @default("")
+  size      Int      @default(0)
+  mimeType  String   @default("")
+  folder    String   @default("general")
+  createdAt DateTime @default(now())
+}
+
+model Enquiry {
+  id          String   @id @default(cuid())
+  name        String
+  phone       String
+  email       String?
+  productName String?
+  message     String
+  status      String   @default("new")
+  createdAt   DateTime @default(now())
+}
+
+model Product {
+  id                String           @id @default(cuid())
+  slug              String           @unique @default("")
+  name              String
+  category          String
+  subCategory       String           @default("")
+  serviceCategoryId String?
+  description       String           @default("")
+  tagline           String           @default("")
+  heroImage         String           @default("")
+  image             String           @default("")
+  specs             String           @default("[]")
+  features          String           @default("[]")
+  tags              String           @default("[]")
+  whyPoints         String           @default("[]")
+  relatedLinks      String           @default("[]")
+  variants          String           @default("[]")
+  metaTitle         String           @default("")
+  metaDesc          String           @default("")
+  isActive          Boolean          @default(true)
+  sortOrder         Int              @default(0)
+  createdAt         DateTime         @default(now())
+
+  serviceCategory   ServiceCategory? @relation(fields: [serviceCategoryId], references: [id], onDelete: SetNull)
+  productVariants   Variant[]
+}
+
+model Variant {
+  id          String   @id @default(cuid())
+  productId   String
+  name        String
+  price       Float    @default(0)
+  image       String   @default("")
+  description String   @default("")
+  tags        String   @default("[]")
+  sortOrder   Int      @default(0)
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  bio       String   @default("")
+  image     String   @default("")
+  isLeader  Boolean  @default(false)
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  location  String   @default("")
+  project   String   @default("")
+  quote     String
+  avatar    String   @default("")
+  rating    Int      @default(5)
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Blog {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  excerpt     String    @default("")
+  content     String    @default("")
+  coverImage  String    @default("")
+  author      String    @default("")
+  tags        String    @default("[]")
+  metaTitle   String    @default("")
+  metaDesc    String    @default("")
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
